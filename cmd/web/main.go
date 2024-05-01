@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -12,8 +13,11 @@ func main() {
 
 	flag.Parse()
 
+	infoLog := log.New(os.Stdout, "INFO\t", log.LUTC|log.Ltime)
+
 	// initialize a new servemux
 	mux := http.NewServeMux()
+	errorLog := log.New(os.Stderr, "ERROR\t", log.LUTC|log.Ltime|log.Lshortfile)
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
@@ -22,8 +26,14 @@ func main() {
 	mux.HandleFunc("/note/view", noteView)
 	mux.HandleFunc("/note/create", noteCreate) // POST
 
+	srv := &http.Server{
+		Addr:     *addr,
+		ErrorLog: errorLog,
+		Handler:  mux,
+	}
+
 	// web server
-	log.Printf("Starting server on %s", *addr) // INFO
-	err := http.ListenAndServe(*addr, mux)
-	log.Fatal(err) // ERROR
+	infoLog.Printf("Starting server on %s", *addr)
+	err := srv.ListenAndServe()
+	errorLog.Fatal(err)
 }
