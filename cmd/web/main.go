@@ -26,20 +26,10 @@ func main() {
 		infoLog:  infoLog,
 	}
 
-	// initialize a new servemux
-	mux := http.NewServeMux()
-
-	fileServer := http.FileServer(http.Dir("./ui/static/"))
-	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
-
-	mux.HandleFunc("/", app.home)
-	mux.HandleFunc("/note/view", app.noteView)
-	mux.HandleFunc("/note/create", app.noteCreate) // POST
-
 	srv := &http.Server{
 		Addr:     *addr,
 		ErrorLog: errorLog,
-		Handler:  mux,
+		Handler:  app.routes(),
 	}
 
 	// web server
