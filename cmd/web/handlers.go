@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strconv"
 
@@ -22,28 +21,10 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, note := range notes {
-		fmt.Fprintf(w, "%+v\n", note)
-	}
+	app.render(w, http.StatusOK, "home.gohtml", &templateData{
+		Notes: notes,
+	})
 
-	// files := []string{
-	// 	"./ui/html/base.gohtml",
-	// 	"./ui/html/partials/nav.gohtml",
-	// 	"./ui/html/pages/home.gohtml",
-	// }
-
-	// // parse html template
-	// ts, err := template.ParseFiles(files...)
-	// if err != nil {
-	// 	app.serverError(w, err)
-	// 	return
-	// }
-	// // execute html template
-	// err = ts.ExecuteTemplate(w, "base", nil)
-	// if err != nil {
-	// 	app.serverError(w, err)
-	// 	return
-	// }
 }
 
 func (app *application) noteCreate(w http.ResponseWriter, r *http.Request) {
@@ -84,24 +65,7 @@ func (app *application) noteView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/base.gohtml",
-		"./ui/html/partials/nav.gohtml",
-		"./ui/html/pages/view.gohtml",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	data := &templateData{
+	app.render(w, http.StatusOK, "view.gohtml", &templateData{
 		Note: note,
-	}
-
-	err = ts.ExecuteTemplate(w, "base", data)
-	if err != nil {
-		app.serverError(w, err)
-	}
+	})
 }

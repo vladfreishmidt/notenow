@@ -2,5 +2,25 @@
 
 {{define "main"}}
 <h2>Latest Notes</h2>
-<p>No notes here yet...</p>
+{{if .Notes}}
+<div class="notes">
+    <div class="notes__inner">
+        {{range .Notes}}
+        <div class="note">
+            <div class="note__inner">
+                <div class="metadata">
+                    <a href="note/view?id={{.ID}}">{{.Title}}</a>
+                    <span class="metadata__id">#{{.ID}}</span>
+                </div>
+                <div><code>{{.Content}}</code></div>
+            </div>
+            <div class="dates">
+                <time>Created {{.Created}}</time>
+                <time>Expires {{.Expires}}</time>
+            </div>
+        </div>
+        {{end}}
+    </div>
+</div>
+{{end}}
 {{end}}
