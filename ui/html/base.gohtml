@@ -10,13 +10,17 @@
 </head>
 
 <body>
-    <header class="header">
-        {{template "nav" .}}
-    </header>
-    <main class="main">
-        {{template "main" .}}
-    </main>
-    <footer class="footer">© NOTENOW</footer>
+    <div class="app">
+        <div class="app__inner">
+            <header class="header">
+                {{template "nav" .}}
+            </header>
+            <main class="main">
+                {{template "main" .}}
+            </main>
+        </div>
+        <footer class="footer">© NOTENOW</footer>
+    </div>
 </body>
 
 </html>
